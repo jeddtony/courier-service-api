@@ -25,7 +25,7 @@ To get a particular token <br>
 <code> /api/tokens/{token} </code>
 
 <h5>Post </h5>
-All post requests are route protected, so you will be required to login or register. If you are not logged in you'll be redirected to a login. <br>
+All post requests are supposed to be route protected, but for this code challenge they will be left without an authentication. <br>
 To  create a new sender use this end point <br>
 <code>/api/senders </code>
 use this as a sample
