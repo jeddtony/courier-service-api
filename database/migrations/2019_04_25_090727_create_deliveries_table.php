@@ -17,7 +17,7 @@ class CreateDeliveriesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('sender_id');
             $table->integer('recipient_id');
-            $table->integer('user_id');
+            $table->integer('dispatcher_id');
             $table->double('weight');
             $table->double('distance');
             $table->double('cost');

@@ -19,7 +19,7 @@ class CustomModel extends Model
      */
     protected $fillable = [
         'name', 'email', 'question', 'answer', 'phone_no', 'address', 'sender_id', 'recipient_id',
-        'user_id', 'weight', 'distance', 'cost', 'status', 'token',
+        'user_id', 'weight', 'distance', 'cost', 'status', 'token', 'dispatcher_id'
     ];
 
 }

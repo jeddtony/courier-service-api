@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Acme\Singletons\CalculateCost;
 use App\Acme\Transformers\DeliveryTransformer;
 use App\Delivery;
+use App\Http\Requests\DeliveryStoreRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Symfony\Component\EventDispatcher\Tests\CallableClass;
 
 class DeliveryController extends Controller
 {
@@ -47,11 +51,28 @@ class DeliveryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+//        dd($request->header('authorization'));
         //
+//        $validate = $request->validated();
+
+        $delivery = Delivery::create([
+            'sender_id' => $request->json()->get('sender_id'),
+            'recipient_id' => $request->json()->get('recipient_id'),
+            'dispatcher_id' => $request->json()->get('dispatcher_id'),
+            'weight' => $request->json()->get('weight'),
+            'distance' => $request->json()->get('distance'),
+            'cost' => CalculateCost::totalCost($request->json()->get('distance'), $request->json()->get('weight')),
+            'status' => $request->json()->get('status'),
+        ]);
+        $this->sendNotification($delivery);
+        return Response::json([
+            'data' => [
+                'message' => 'Delivery created successfully',
+            ]
+        ], 201);
     }
 
     /**
@@ -79,12 +100,21 @@ class DeliveryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Delivery  $delivery
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Delivery $delivery)
+    public function edit($delivery)
     {
         //
+        $delivery = Delivery::find($delivery);
+        if(!$delivery){
+            return Response::json([
+                'error' => [
+                    'message' => 'Ooops! Data does not exist.'
+                ]
+            ], 404);
+        }
+        return Response::json([
+            'data' => $this->deliveryTransformer->transform($delivery),
+        ], 200);
     }
 
     /**
@@ -92,11 +122,26 @@ class DeliveryController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Delivery  $delivery
-     * @return \Illuminate\Http\Response
+
      */
-    public function update(Request $request, Delivery $delivery)
+    public function update(Request $request, $delivery)
     {
-        //
+        $delivery = Delivery::find($delivery);
+        if(!$delivery){
+            return Response::json([
+                'error' => [
+                    'message' => 'Ooops! Data does not exist.'
+                ]
+            ], 404);
+        }
+        $delivery->status = $request->json()->get('status');
+        $delivery->save();
+        $this->sendNotification($delivery);
+        return Response::json([
+            'data' => [
+                'message' => 'Delivery created successfully',
+            ]
+        ], 201);
     }
 
     /**
@@ -108,5 +153,13 @@ class DeliveryController extends Controller
     public function destroy(Delivery $delivery)
     {
         //
+    }
+
+    private function sendNotification($delivery)
+    {
+        /**        Todo: Here a notification will be sent to the recipient
+         *        about the changes made by the sender on either the delivery
+         *       this notification can be sent by email or sms
+         */
     }
 }

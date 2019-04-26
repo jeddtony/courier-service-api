@@ -17,10 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/annoyingapi', function(){
-    dd('this is the annoying api');
-});
-
 Route::get('/sender/create', 'SenderController@create');
 
 Route::post('/sender/create', 'SenderController@store');
@@ -41,6 +37,17 @@ Route::get('/deliveries', 'DeliveryController@index');
 
 Route::get('/deliveries/{delivery}', 'DeliveryController@show');
 
-Route::middleware('auth:api')->get('/playwithauth', function(Request $request) {
-    return $request->user();
-});
+
+Route::get('/token/create', 'TokenController@create');
+
+Route::middleware('auth:api')->post('/recipient/create', 'RecipientController@store');
+
+Route::get('/edit/token/{token}', 'TokenController@edit');
+
+Route::middleware('auth:api')->patch('/edit/token/{token}', 'TokenController@update');
+
+Route::get('/edit/delivery/{delivery}', 'DeliveryController@edit');
+
+Route::middleware('auth:api')->patch('/edit/delivery/{delivery}', 'DeliveryController@update');
+
+Route::post('/delivery', 'DeliveryController@store');

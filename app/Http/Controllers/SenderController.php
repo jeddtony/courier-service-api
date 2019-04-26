@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SenderStoreRequest;
 use App\Sender;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 use App\Acme\Transformers\SenderTransformer;
+use Illuminate\Support\Facades\Validator;
 
 class SenderController extends Controller
 {
@@ -46,24 +50,19 @@ class SenderController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     ** @param  \Illuminate\Http\Request  $request
      */
     public function store(Request $request)
     {
-        //
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'phone_no' => 'required',
-        ]);
+//        dd($request['name']);
 
-        $task = Task::create($request->all());
-//
-//        return Response::json([
-//            'data' =>
-//        ])
+        $sender = Sender::create($request->all());
+
+        return Response::json([
+            'data' => [
+                'message' => 'Sender created successfully',
+            ]
+        ], 201);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use App\Delivery;
+use App\Dispatcher;
 use App\Recipient;
 use App\Sender;
 use App\Token;
@@ -37,6 +38,13 @@ $factory->define(Sender::class, function (Faker $faker){
     ];
 });
 
+$factory->define(Dispatcher::class, function (Faker $faker){
+    return[
+        'name' => $faker->name,
+        'email' => $faker->safeEmail,
+        'phone_no' => $faker->phoneNumber,
+    ];
+});
 $factory->define(Recipient::class, function (Faker $faker){
     return[
         'name' => $faker->name,
@@ -51,7 +59,7 @@ $factory->define(Delivery::class, function (Faker $faker){
     return[
         'sender_id' => Sender::all()->random()->id,
         'recipient_id' => Recipient::all()->random()->id,
-        'user_id' => User::all()->random()->id,
+        'dispatcher_id' => Dispatcher::all()->random()->id,
         'weight' => rand(5, 50),
         'distance' => rand(3, 100),
         'cost' => rand(100, 1000),

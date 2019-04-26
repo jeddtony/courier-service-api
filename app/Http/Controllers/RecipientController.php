@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RecipientStoreRequest;
 use App\Recipient;
 use Illuminate\Http\Request;
 use App\Acme\Transformers\RecipientTransformer;
@@ -39,17 +40,27 @@ class RecipientController extends Controller
     public function create()
     {
         //
-    }
+}
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+
      */
-    public function store(Request $request)
+    public function store(RecipientStoreRequest $request)
     {
-        //
+
+//        $validate = $request->validated();
+
+        $recipient = Recipient::create($request->all());
+
+
+        return Response::json([
+            'data' => [
+                'message' => 'Recipient created successfully',
+            ]
+        ], 201);
     }
 
     /**
