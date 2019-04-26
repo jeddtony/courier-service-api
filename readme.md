@@ -23,3 +23,59 @@ To get a particular delivery use <br>
 <code> /api/deliveries/{delivery} </code>
 To get a particular token <br>
 <code> /api/tokens/{token} </code>
+
+<h5>Post </h5>
+All post requests are route protected, so you will be required to login or register. If you are not logged in you'll be redirected to a login. <br>
+To  create a new sender use this end point <br>
+<code>/api/senders </code>
+use this as a sample
+<code>"name": "John Doe",
+        "email": "john@example.com",
+        "phone_no": "08123456789"
+        </code>
+To create a new recipient use <br>
+<code> /api/recipients </code>
+<code>"name": "John Doe",
+        "email": "john@example.com",
+        "phone_no": "08123456789",
+        "address" : "My Street Address, Lagos",
+        "sender_id" : 8,
+        </code>
+To create a new delivery use <br>
+<code> /api/deliveries </code>
+<code>
+"sender_id" : 3,
+"recipient_id" : 5,
+"dispatcher_id" : 4,
+"weight": 8,
+"distance" : 9,
+"status" : "processing",
+</code>
+To create a  token <br>
+<code> /api/token </code>
+<code>
+"delivery_id": 5,
+"token": "qwejksieoijhei",
+"question": "what is my favourite color?",
+"answer": "blue"
+</code>
+<h5>Edit</h5>
+To edit a particular sender use <br>
+<code> /api/senders/{sender} </code> where <code> {sender} </code> is the id of the sender, it should be an integer value.
+To edit a particular recipient use <br>
+<code> /api/recipients/{recipients} </code> <br>
+To edit a particular delivery use <br>
+<code> /api/deliveries/{delivery} </code>
+To edit a particular token <br>
+<code> /api/tokens/{token} </code>
+
+<5>Update</h5>
+All patch requests are route protected, so you will be required to login or register. If you are not logged in you'll be redirected to a login. <br>
+To update a particular sender use <br>
+<code> /api/senders/{sender} </code> where <code> {sender} </code> is the id of the sender, it should be an integer value.
+To update a particular recipient use <br>
+<code> /api/recipients/{recipients} </code> <br>
+To update a particular delivery use <br>
+<code> /api/deliveries/{delivery} </code>
+To update a particular token <br>
+<code> /api/tokens/{token} </code>

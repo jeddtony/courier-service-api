@@ -6,8 +6,10 @@ use App\Acme\Singletons\TokenGenerator;
 use App\Acme\Transformers\TokenTransformer;
 use App\Http\Requests\TokenStoreRequest;
 use App\Token;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use SQLiteException;
 
 class TokenController extends Controller
 {
@@ -49,19 +51,28 @@ class TokenController extends Controller
      * @param  \Illuminate\Http\Request  $request
 
      */
-    public function store(TokenStoreRequest $request)
+    public function store(Request $request)
     {
         //
 //        dd($request['name']);
 //        $validate = $request->validated();
+        try{
         $token = Token::create($request->all());
         $this->sendNotification($token);
         return Response::json([
             'data' => [
                 'message' => 'Token created successfully',
             ]
-        ], 201);
-    }
+        ], 201);}
+        catch (QueryException $exception ){
+            return Response::json([
+                'data' => [
+                    'message' => 'Parameters failed validation',
+                ]
+            ], 422);
+        }
+        }
+
 
     /**
      * Display the specified resource.
@@ -127,16 +138,25 @@ class TokenController extends Controller
                 ]
             ], 404);
         }
-        $token->token = $request->json()->get('token');
-        $token->question = $request->json()->get('question');
-        $token->answer = $request->json()->get('answer');
-        $token->save();
-        $this->sendNotification($token);
-        return Response::json([
-            'data' => [
-                'message' => 'Delivery created successfully',
-            ]
-        ], 201);
+        try {
+            $token->token = $request->json()->get('token');
+            $token->question = $request->json()->get('question');
+            $token->answer = $request->json()->get('answer');
+            $token->save();
+            $this->sendNotification($token);
+            return Response::json([
+                'data' => [
+                    'message' => 'Delivery created successfully',
+                ]
+            ], 201);
+        } catch (QueryException $e){
+            return Response::json([
+                'data' => [
+                    'message' => 'Parameters failed validation',
+                ]
+            ], 422);
+
+        }
     }
 
     /**

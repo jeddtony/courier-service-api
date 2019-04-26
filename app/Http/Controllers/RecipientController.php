@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RecipientStoreRequest;
 use App\Recipient;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Acme\Transformers\RecipientTransformer;
 use Illuminate\Support\Facades\Response;
@@ -53,15 +54,22 @@ class RecipientController extends Controller
 
 //        $validate = $request->validated();
 
-        $recipient = Recipient::create($request->all());
+        try {
+            $recipient = Recipient::create($request->all());
+            return Response::json([
+                'data' => [
+                    'message' => 'Recipient created successfully',
+                ]
+            ], 201);
+        } catch(QueryException $e){
+            return Response::json([
+                'data' => [
+                    'message' => 'Parameters failed validation',
+                ]
+            ], 422);
+        }
+        }
 
-
-        return Response::json([
-            'data' => [
-                'message' => 'Recipient created successfully',
-            ]
-        ], 201);
-    }
 
     /**
      * Display the specified resource.

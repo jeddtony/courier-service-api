@@ -6,6 +6,7 @@ use App\Acme\Singletons\CalculateCost;
 use App\Acme\Transformers\DeliveryTransformer;
 use App\Delivery;
 use App\Http\Requests\DeliveryStoreRequest;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -58,6 +59,7 @@ class DeliveryController extends Controller
         //
 //        $validate = $request->validated();
 
+        try{
         $delivery = Delivery::create([
             'sender_id' => $request->json()->get('sender_id'),
             'recipient_id' => $request->json()->get('recipient_id'),
@@ -73,7 +75,15 @@ class DeliveryController extends Controller
                 'message' => 'Delivery created successfully',
             ]
         ], 201);
+    }catch (QueryException $e){
+            return Response::json([
+                'data' => [
+                    'message' => 'Parameters failed validation',
+                ]
+            ], 422);
     }
+    }
+
 
     /**
      * Display the specified resource.
@@ -134,14 +144,23 @@ class DeliveryController extends Controller
                 ]
             ], 404);
         }
-        $delivery->status = $request->json()->get('status');
-        $delivery->save();
-        $this->sendNotification($delivery);
-        return Response::json([
-            'data' => [
-                'message' => 'Delivery created successfully',
-            ]
-        ], 201);
+        try {
+            $delivery->status = $request->json()->get('status');
+            $delivery->save();
+            $this->sendNotification($delivery);
+            return Response::json([
+                'data' => [
+                    'message' => 'Delivery created successfully',
+                ]
+            ], 201);
+        }
+        catch(QueryException $e){
+            return Response::json([
+                'data' => [
+                    'message' => 'Parameters failed validation',
+                ]
+            ], 422);
+        }
     }
 
     /**

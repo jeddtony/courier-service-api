@@ -12,10 +12,10 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::get('/sender/create', 'SenderController@create');
 
@@ -40,14 +40,16 @@ Route::get('/deliveries/{delivery}', 'DeliveryController@show');
 
 Route::get('/token/create', 'TokenController@create');
 
-Route::middleware('auth:api')->post('/recipient/create', 'RecipientController@store');
+Route::post('/recipient/create', 'RecipientController@store');
 
 Route::get('/edit/token/{token}', 'TokenController@edit');
 
-Route::middleware('auth:api')->patch('/edit/token/{token}', 'TokenController@update');
+Route::patch('/edit/token/{token}', 'TokenController@update');
 
 Route::get('/edit/delivery/{delivery}', 'DeliveryController@edit');
 
-Route::middleware('auth:api')->patch('/edit/delivery/{delivery}', 'DeliveryController@update');
+Route::patch('/edit/delivery/{delivery}', 'DeliveryController@update');
 
 Route::post('/delivery', 'DeliveryController@store');
+
+Route::post('/token', 'TokenController@store');

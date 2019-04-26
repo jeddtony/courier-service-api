@@ -9,6 +9,7 @@
 namespace App\Acme\Transformers;
 
 
+use App\Dispatcher;
 use App\Recipient;
 use App\Sender;
 use App\User;
@@ -30,7 +31,7 @@ class DeliveryTransformer extends Transformer
         return   [
             'sender' => $this->senderTransformer->transform(Sender::find($delivery['sender_id'])),
             'recipient' => $this->recipientTransformer->transform(Recipient::find($delivery['recipient_id'])),
-            'agent' => User::find($delivery['user_id'])->name,
+            'agent' => Dispatcher::find($delivery['dispatcher_id'])->name,
             'weight'=> (double)$delivery['weight'],
             'distance'=> (double)$delivery['distance'],
             'cost' => (double)$delivery['cost'],
